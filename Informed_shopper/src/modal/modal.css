@@ -1,0 +1,348 @@
+/* src/modal/modal.css */
+/*body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+  }
+  
+  .container {
+    width: 450px;
+    min-height: 500px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .screen {
+    padding: 2rem;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 4rem);
+    height: calc(100% - 4rem);
+    background: white;
+  }*/
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    color: #333;
+  }
+  
+  .container {
+    width: 100%;
+    height: 100vh;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .screen.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .screen.exit {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .reflection-icon {
+    background-color: #e6f7ff;
+    color: #1890ff;
+  }
+  
+  .marketing-icon, .urgency-icon, .social-icon, .price-icon {
+    background-color: #fff2e8;
+    color: #ff4d4f;
+  }
+  
+  .water-icon {
+    background-color: #e6f7ff;
+    color: #1890ff;
+  }
+  
+  .carbon-icon {
+    background-color: #f6ffed;
+    color: #52c41a;
+  }
+  
+  .money-icon, .borrow-icon, .secondhand-icon, .wait-icon {
+    background-color: #fffbe6;
+    color: #faad14;
+  }
+  
+  .continue-icon {
+    background-color: #f0f2ff;
+    color: #597ef7;
+  }
+  
+  .skip-icon {
+    background-color: #fff2e8;
+    color: #ff4d4f;
+  }
+  
+  .delay-icon {
+    background-color: #fffbe6;
+    color: #faad14;
+  }
+  
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  
+  p {
+    margin: 0 0 1rem;
+    line-height: 1.5;
+    color: #666;
+  }
+  
+  .marketing-alert, .urgency-alert, .social-proof-alert, .price-anchor-alert {
+    background: #fff8f8;
+    border-left: 3px solid #ff4d4f;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .alert-content {
+    flex: 1;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.5rem;
+  }
+  
+  .reflection-questions p {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .navigation {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    right: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .progress-dots {
+    display: flex;
+  }
+  
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ddd;
+    margin-right: 8px;
+  }
+  
+  .dot.active {
+    background: #1890ff;
+  }
+  
+  .continue-btn, .start-over-btn {
+    background: #1890ff;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .continue-btn:hover, .start-over-btn:hover {
+    background: #40a9ff;
+  }
+  
+  .impact-data {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  
+  .impact-item {
+    flex: 1;
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .impact-item:first-child {
+    margin-right: 1rem;
+  }
+  
+  .impact-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+    color: #1890ff;
+  }
+  
+  .carbon .impact-value {
+    color: #52c41a;
+  }
+  
+  .financial-impact {
+    background: #fffbe6;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .price {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+    color: #faad14;
+  }
+  
+  .alternative-option {
+    display: flex;
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  
+  .option-content {
+    flex: 1;
+  }
+  
+  .view-options-btn {
+    background: none;
+    border: none;
+    color: #1890ff;
+    padding: 0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .decision-options {
+    margin: 1.5rem 0;
+  }
+  
+  .decision-option {
+    display: flex;
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .decision-option:hover {
+    background: #f0f0f0;
+  }
+  
+  .decision-option input {
+    position: absolute;
+    opacity: 0;
+  }
+  
+  .decision-option input:checked + .option-content {
+    background: #e6f7ff;
+    border-color: #1890ff;
+  }
+  
+  .decision-option .text {
+    flex: 1;
+  }
+  
+  .result-container {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .streak-info {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+  }
+  
+  .streak-bar {
+    height: 12px;
+    background: #eee;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+  
+  .streak-progress {
+    height: 100%;
+    background: linear-gradient(to right, #52c41a, #1890ff);
+    border-radius: 6px;
+  }
+  
+  .streak-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .achievement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .achievement-icon {
+    width: 24px;
+    height: 24px;
+    background: #fffbe6;
+    border-radius: 50%;
+    margin-right: 8px;
+  }

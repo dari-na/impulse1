@@ -1,0 +1,65 @@
+<!-- src/modal/modal.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase Impact</title>
+  <link rel="stylesheet" href="modal.css">
+</head>
+<body>
+  <div id="modalContainer" class="container">
+    <!-- Screens will be dynamically inserted here -->
+    <div id="reflectionScreen" class="screen active">
+      <div class="header">
+        <div class="icon reflection-icon"></div>
+        <h2>Let's reflect for a moment</h2>
+      </div>
+      <p>Taking a moment to think about your purchase can help you make choices you'll feel good about later.</p>
+      
+      <div class="marketing-alert">
+        <div class="icon marketing-icon"></div>
+        <div class="alert-content">
+          <h3>Marketing Tactics Detected</h3>
+          <p>We noticed some common marketing strategies that might be influencing your decision.</p>
+        </div>
+        <button class="close-btn">×</button>
+      </div>
+      
+      <div class="urgency-alert">
+        <div class="icon urgency-icon"></div>
+        <p>Limited time offer ending soon</p>
+      </div>
+      
+      <div class="social-proof-alert">
+        <div class="icon social-icon"></div>
+        <p>10 people bought in last hour</p>
+      </div>
+      
+      <div class="price-anchor-alert">
+        <div class="icon price-icon"></div>
+        <p>Original price shown as much higher</p>
+      </div>
+      
+      <div class="reflection-questions">
+        <p>Why do you want to buy this item today?</p>
+        <p>Were you previously planning on buying this?</p>
+      </div>
+      
+      <div class="navigation">
+        <div class="progress-dots">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <button id="reflectionContinueBtn" class="continue-btn">Continue</button>
+      </div>
+    </div>
+    
+    <!-- Additional screens will be inserted by JavaScript -->
+  </div>
+  
+  <script src="modal.js"></script>
+</body>
+</html>
