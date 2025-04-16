@@ -10,8 +10,7 @@
       "128": "icons/eco-bag128.png"
     },
     "action": {
-      "default_icon": "icons/eco-bag128.png",
-      "default_popup": "src/sidepanel/sidepanel.html"
+      "default_icon": "icons/eco-bag128.png"
     },
     "side_panel": {
       "default_path": "src/sidepanel/sidepanel.html"
@@ -32,7 +31,7 @@
     },
     "content_scripts": [
       {
-        "matches": ["<all_urls>"],
+        "matches": ["*://*.shein.com/*"],
         "js": ["src/content-scripts/checkout-detector.js"],
         "run_at": "document_idle"
       }
@@ -41,8 +40,8 @@
       "resources": [
         "src/modal/modal.html",
         "src/modal/modal.css",
-        "src/modal/modal.js"
+        "src/reflection/.js"
       ],
-      "matches": ["<all_urls>"]
+      "matches": ["*://*.shein.com/*"]
     }]
   }

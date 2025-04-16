@@ -62,7 +62,7 @@ function detectCheckoutButtons() {
     
     // Create iframe to load modal content
     const iframe = document.createElement('iframe');
-    iframe.src = chrome.runtime.getURL('src/modal/modal.html');
+    iframe.src = chrome.runtime.getURL('src/sidepanel/sidepanel.html?autoStart=true');
     iframe.id = 'purchase-impact-modal-content';
     iframe.style.width = '500px';
     iframe.style.height = '600px';
@@ -111,23 +111,17 @@ function detectCheckoutButtons() {
   }
   
   // Listen for messages from the modal iframe
-  window.addEventListener('message', function(event) {
-    // Make sure the message is from our extension
-    if (event.origin !== window.location.origin) {
-      return;
-    }
-    
-    const data = event.data;
-    
-    if (data.action === 'closeModal') {
-      closeModal();
-    } else if (data.action === 'continueCheckout') {
-      closeModal();
-      const originalUrl = sessionStorage.getItem('originalCheckoutUrl');
-      if (originalUrl) {
-        window.location.href = originalUrl;
-      }
-    }
+  checkoutButtons.forEach(button => {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+  
+      // Store the intended checkout URL
+      sessionStorage.setItem('originalCheckoutUrl', button.href || document.location.href);
+  
+      // Ask background script to open popup
+      chrome.runtime.sendMessage({ action: "showModal" });
+    });
   });
   
   // Run detector when page loads and also periodically to catch dynamically added buttons

@@ -324,10 +324,4 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.appendChild(closeButton);
       };
-
-    // Send a message to proceed with checkout
-    window.parent.postMessage({ action: 'continueCheckout' }, '*');
-
-    // Send a message to close the modal
-    window.parent.postMessage({ action: 'closeModal' }, '*');
   });
