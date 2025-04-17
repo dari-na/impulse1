@@ -36,12 +36,10 @@
         "run_at": "document_idle"
       }
     ],
-    "web_accessible_resources": [{
-      "resources": [
-        "src/modal/modal.html",
-        "src/modal/modal.css",
-        "src/reflection/.js"
-      ],
-      "matches": ["*://*.shein.com/*"]
-    }]
-  }
+      "web_accessible_resources": [
+        {
+          "resources": ["src/sidepanel/sidepanel.html", "src/sidepanel/sidepanel.js", "src/sidepanel/sidepanel.css"],
+          "matches": ["<all_urls>"]
+        }
+      ]
+    }

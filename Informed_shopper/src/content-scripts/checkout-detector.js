@@ -1,57 +1,54 @@
 // src/content-scripts/checkout-detector.js
 function detectCheckoutButtons() {
-  console.log('detectCheckoutButtons is running');
-    // Common checkout button selectors for popular retail sites
-    const checkoutSelectors = [
-      // Amazon
-      'input[name="proceedToRetailCheckout"]',
-      'input[value*="Proceed to checkout"]',
-      'a[href*="checkout"]',
-      // General selectors that might work across sites
-      'button[id*="checkout"]',
-      'a[id*="checkout"]',
-      'button[class*="checkout"]',
-      'a[class*="checkout"]',
-      // Add more selectors as needed
-    ];
-  
-    // Combine selectors and find matching elements
-    const selector = checkoutSelectors.join(', ');
-    const checkoutButtons = document.querySelectorAll(selector);
-    
-    // Add click listeners to all potential checkout buttons
-    checkoutButtons.forEach(button => {
-      button.addEventListener('click', function(event) {
-        // Prevent default action temporarily
-        event.preventDefault();
-        event.stopPropagation();
+  console.log('🟢 detectCheckoutButtons running...');
 
-        // Inject modal directly into the page
-        injectModal();
+  const checkoutSelectors = [
+    'a.submitBtn', // ✅ Shein's Checkout Now button
+    'input[name="proceedToRetailCheckout"]',
+    'input[value*="Proceed to checkout"]',
+    'a[href*="checkout"]',
+    'button[id*="checkout"]',
+    'a[id*="checkout"]',
+    'button[class*="checkout"]',
+    'a[class*="checkout"]',
+  ];
 
-        // Store the original click event's URL or fallback to the current page URL
-        sessionStorage.setItem('originalCheckoutUrl', button.href || document.location.href);
+  const selector = checkoutSelectors.join(', ');
+  const checkoutButtons = document.querySelectorAll(selector);
 
-        // Listen for user decision from the modal
-        window.addEventListener('message', function modalMessageHandler(event) {
-          if (event.data.action === 'continueCheckout') {
-            // Allow navigation to the original checkout URL
-            const originalUrl = sessionStorage.getItem('originalCheckoutUrl');
-            if (originalUrl) {
-              window.location.href = originalUrl;
-            }
-            // Remove the event listener after handling
-            window.removeEventListener('message', modalMessageHandler);
-          } else if (event.data.action === 'closeModal') {
-            // User closed the modal without proceeding
-            console.log('User chose not to proceed with checkout.');
-            // Remove the event listener after handling
-            window.removeEventListener('message', modalMessageHandler);
+  console.log("🛒 Found potential checkout buttons:", checkoutButtons);
+
+  checkoutButtons.forEach(button => {
+    // Avoid double-binding
+    if (button.dataset.listenerAttached === "true") return;
+
+    button.dataset.listenerAttached = "true";
+
+    button.addEventListener("click", function(event) {
+      console.log("🟠 Checkout button clicked:", button);
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      injectModal();
+
+      sessionStorage.setItem('originalCheckoutUrl', button.href || document.location.href);
+
+      window.addEventListener('message', function modalMessageHandler(event) {
+        if (event.data.action === 'continueCheckout') {
+          const originalUrl = sessionStorage.getItem('originalCheckoutUrl');
+          if (originalUrl) {
+            window.location.href = originalUrl;
           }
-        });
+          window.removeEventListener('message', modalMessageHandler);
+        } else if (event.data.action === 'closeModal') {
+          console.log('❌ User closed the modal.');
+          window.removeEventListener('message', modalMessageHandler);
+        }
       });
     });
-  }
+  });
+}
   
   // Function to inject the modal overlay into the page
   function injectModal() {
@@ -111,10 +108,14 @@ function detectCheckoutButtons() {
   }
   
   // Listen for messages from the modal iframe
-  checkoutButtons.forEach(button => {
-    button.addEventListener('click', function(event) {
-      event.preventDefault();
-      event.stopPropagation();
+  checkoutButtons.forEach(button => {    
+      button.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+    
+        injectModal();
+    
+        sessionStorage.setItem('originalCheckoutUrl', button.href || document.location.href);
   
       // Store the intended checkout URL
       sessionStorage.setItem('originalCheckoutUrl', button.href || document.location.href);

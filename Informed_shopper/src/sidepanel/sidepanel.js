@@ -1,17 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const viewDashboard = document.getElementById("view-dashboard");
-  const viewReflection = document.getElementById("view-reflection");
+  const dashboardView = document.getElementById("view-dashboard");
+  const reflectionView = document.getElementById("view-reflection");
   const modalContainer = document.getElementById("modalContainer");
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const autoStart = urlParams.get("autoStart");
-  
-    if (autoStart === "true") {
-      startReflectionFlow(); // ← this kicks off the slides automatically
-    }
-  });
+  const startBtn = document.getElementById("start-reflection");
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      dashboardView.classList.remove("active");
+      reflectionView.classList.add("active");
+      startReflectionFlow();
+    });
+  }
 
+  modalContainer.innerHTML = '';
   function startReflectionFlow() {
     const screens = {
         dashboard: `
@@ -213,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `
     };
   
-    const screenOrder = ['dashboard', 'impact', 'alternatives', 'decision', 'result'];
+    const screenOrder = ['impact', 'alternatives', 'decision', 'result'];
     let currentScreenIndex = 0;
     const container = document.getElementById("modalContainer");
   
