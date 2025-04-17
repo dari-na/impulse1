@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const autoStart = urlParams.get("autoStart");
-  
+
     if (autoStart === "true") {
       startReflectionFlow(); // ← this kicks off the slides automatically
     }
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startReflectionFlow() {
     const screens = {
-        dashboard: `
+      dashboard: `
           <div class="screen active">
             <div class="header">
               <div class="logo">🛍️ Mindful Shopping</div>
@@ -210,38 +210,44 @@ document.addEventListener("DOMContentLoaded", () => {
             <button id="startOverBtn" class="continue-btn">Great!</button>
           </div>
         </div>
-      `
+      `,
     };
-  
-    const screenOrder = ['dashboard', 'impact', 'alternatives', 'decision', 'result'];
+
+    const screenOrder = [
+      "dashboard",
+      "impact",
+      "alternatives",
+      "decision",
+      "result",
+    ];
     let currentScreenIndex = 0;
     const container = document.getElementById("modalContainer");
-  
+
     // Start with first screen
     container.innerHTML = screens[screenOrder[currentScreenIndex]];
     setScreenEventListeners(screenOrder[currentScreenIndex]);
-  
+
     function showNextScreen() {
       const currentScreen = container.querySelector(".screen.active");
       currentScreenIndex++;
-  
+
       if (currentScreenIndex >= screenOrder.length) {
         // Done — go back to dashboard
         document.getElementById("view-reflection").classList.remove("active");
         document.getElementById("view-dashboard").classList.add("active");
         return;
       }
-  
+
       const nextScreenName = screenOrder[currentScreenIndex];
       const nextScreenHTML = screens[nextScreenName];
-  
+
       const nextScreen = document.createElement("div");
       nextScreen.className = "screen";
       nextScreen.innerHTML = nextScreenHTML;
-  
+
       container.appendChild(nextScreen);
       currentScreen.classList.add("exit");
-  
+
       setTimeout(() => {
         currentScreen.classList.remove("active");
         nextScreen.classList.add("active");
@@ -251,32 +257,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 300);
       }, 100);
     }
-  
+
     function setScreenEventListeners(screenName) {
       if (screenName === "dashboard") {
-        document.getElementById("dashboardContinueBtn")?.addEventListener("click", showNextScreen);
+        document
+          .getElementById("dashboardContinueBtn")
+          ?.addEventListener("click", showNextScreen);
       } else if (screenName === "impact") {
-        document.getElementById("impactContinueBtn")?.addEventListener("click", showNextScreen);
+        document
+          .getElementById("impactContinueBtn")
+          ?.addEventListener("click", showNextScreen);
       } else if (screenName === "alternatives") {
-        document.getElementById("alternativesContinueBtn")?.addEventListener("click", showNextScreen);
+        document
+          .getElementById("alternativesContinueBtn")
+          ?.addEventListener("click", showNextScreen);
       } else if (screenName === "decision") {
-        document.getElementById("decisionContinueBtn")?.addEventListener("click", () => {
-          const decision = document.querySelector('input[name="decision"]:checked')?.value || "skip";
-          if (decision === "delay") {
-            chrome.alarms.create("purchaseReminder", {
-              delayInMinutes: 24 * 60
-            });
-          }
-          showNextScreen();
-        });
+        document
+          .getElementById("decisionContinueBtn")
+          ?.addEventListener("click", () => {
+            const decision =
+              document.querySelector('input[name="decision"]:checked')?.value ||
+              "skip";
+            if (decision === "delay") {
+              chrome.alarms.create("purchaseReminder", {
+                delayInMinutes: 24 * 60,
+              });
+            }
+            showNextScreen();
+          });
       } else if (screenName === "result") {
-        document.getElementById("startOverBtn")?.addEventListener("click", () => {
-          // Reset to the beginning
-          currentScreenIndex = 0;
-          const container = document.getElementById("modalContainer");
-          container.innerHTML = screens[screenOrder[0]];
-          setScreenEventListeners(screenOrder[0]);
-        });
+        document
+          .getElementById("startOverBtn")
+          ?.addEventListener("click", () => {
+            // Reset to the beginning
+            currentScreenIndex = 0;
+            const container = document.getElementById("modalContainer");
+            container.innerHTML = screens[screenOrder[0]];
+            setScreenEventListeners(screenOrder[0]);
+          });
       }
     }
   }
