@@ -1,7 +1,8 @@
 // src/content-scripts/checkout-detector.js
 
 function detectCheckoutButtons() {
-	console.log("detectCheckoutButtons is running");
+	console.log("🔍 detectCheckoutButtons is running");
+
 	const checkoutSelectors = [
 		'input[name="proceedToRetailCheckout"]',
 		'input[value*="Proceed to checkout"]',
@@ -10,19 +11,33 @@ function detectCheckoutButtons() {
 		'a[id*="checkout"]',
 		'button[class*="checkout"]',
 		'a[class*="checkout"]',
-		"button.j-cart-check",
+		'button.j-cart-check',
+		'div.j-checkout-btn'
 	];
 
 	const selector = checkoutSelectors.join(", ");
 	const checkoutButtons = document.querySelectorAll(selector);
 
 	checkoutButtons.forEach((button) => {
-		button.addEventListener("click", function (event) {
-			event.preventDefault();
-			event.stopPropagation();
-			injectModal();
-			sessionStorage.setItem("originalCheckoutUrl", document.location.href);
-		});
+		if (!button.classList.contains('mindful-checkout-bound')) {
+			console.log("🧠 Replacing button to block native handlers:", button);
+
+			const clone = button.cloneNode(true);
+			clone.classList.add('mindful-checkout-bound');
+
+			clone.addEventListener("click", function (event) {
+				console.log("🛑 Intercepted cloned checkout button click");
+
+				event.preventDefault();
+				event.stopPropagation();
+				event.stopImmediatePropagation();
+
+				sessionStorage.setItem("originalCheckoutUrl", document.location.href);
+				injectModal();
+			});
+
+			button.replaceWith(clone);
+		}
 	});
 }
 
@@ -37,7 +52,6 @@ function injectModal() {
 	iframe.style.width = "480px";
 	iframe.style.height = "auto";
 	iframe.style.maxHeight = "95vh";
-	iframe.style.border = "none";
 	iframe.style.borderRadius = "20px";
 	iframe.style.boxShadow = "0 16px 40px rgba(0,0,0,0.2)";
 	iframe.style.overflow = "hidden";
@@ -78,7 +92,6 @@ function closeModal() {
 	}
 }
 
-// 🔁 Listen for messages once, globally
 window.addEventListener("message", function (event) {
 	console.log("📨 Message received:", event.data);
 
@@ -93,6 +106,7 @@ window.addEventListener("message", function (event) {
 	} else if (event.data.action === "continueCheckout") {
 		const originalUrl = sessionStorage.getItem("originalCheckoutUrl");
 		if (originalUrl) {
+			console.log("🔁 Continuing to checkout:", originalUrl);
 			window.location.href = originalUrl;
 		}
 	}
@@ -100,8 +114,3 @@ window.addEventListener("message", function (event) {
 
 document.addEventListener("DOMContentLoaded", detectCheckoutButtons);
 setInterval(detectCheckoutButtons, 2000);
-
-setTimeout(() => {
-	console.log("🧪 Manual test: Injecting modal...");
-	injectModal();
-}, 2000);
