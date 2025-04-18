@@ -186,7 +186,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 
 		slideElement.querySelector('.finish-btn').addEventListener('click', () => {
-			window.parent.postMessage({action: 'closeModal'}, '*');
+			if (choice === 'purchase') {
+				window.parent.postMessage({ action: 'continueCheckout' }, '*');
+			} else {
+				window.parent.postMessage({ action: 'closeModal' }, '*');
+			}
 		});
 	}
 
@@ -234,13 +238,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (e.target.classList.contains('final-btn')) {
 			const choice = e.target.dataset.choice;
 			renderFinalSlide(choice);
-
-			// Only auto-send for "purchase" (user wants to proceed)
-			if (choice === 'purchase') {
-				setTimeout(() => {
-					window.parent.postMessage({action: 'continueCheckout'}, '*');
-				}, 300);
-			}
 		}
 	});
 
