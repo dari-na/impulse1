@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
 
 	const container = document.getElementById('modalContainer');
@@ -17,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		clearTimeout(resizeTimeout);
 		resizeTimeout = setTimeout(postHeightToParent, 150);
 	});
-
 
 	const slides = [
 		`
@@ -118,27 +118,78 @@ document.addEventListener('DOMContentLoaded', function () {
 				<h2>What would you like to do?</h2>
 			</div>
 			<p>Make a mindful choice about this purchase:</p>
-
-			<div class="card-section highlight">
+	
+			<button class="card-section final-btn" data-choice="purchase">
 				✅ <strong>Continue with purchase</strong><br>
 				I’ve thought about it and still want to buy.
-			</div>
+			</button>
 
-			<div class="card-section">
+			<button class="card-section final-btn" data-choice="skip">
 				❌ <strong>Skip this purchase</strong><br>
 				I’ve decided not to buy it right now.
-			</div>
+			</button>
 
-			<div class="card-section">
+			<button class="card-section final-btn" data-choice="delay">
 				⏳ <strong>Delay for 24 hours</strong><br>
 				I want to wait and revisit this later.
-			</div>
+			</button>
 
 			<div class="progress-dots"></div>
-			<button class="continue-btn">Finish</button>
 		</div>
 		`
 	];
+
+	function renderFinalSlide(choice) {
+		let title = '';
+		let message = '';
+		let icon = '';
+		let bgColor = '';
+		let actionText = '';
+
+		if (choice === 'skip') {
+			icon = '❌';
+			title = 'Purchase Skipped';
+			message = 'Great choice! You\'ve saved money and reduced your environmental impact.';
+			actionText = 'Nice!';
+			bgColor = '#ffe9f1';
+		} else if (choice === 'delay') {
+			icon = '⏳';
+			title = 'Purchase Delayed';
+			message = 'Awesome. Giving yourself space to think is a great move.';
+			actionText = 'Got it!';
+			bgColor = '#fff8e1';
+		} else {
+			icon = '✅';
+			title = 'Purchase Confirmed';
+			message = 'Sounds good. Hope it brings you joy!';
+			actionText = 'Thanks!';
+			bgColor = '#e6f4ea';
+		}
+
+		const finalSlide = `
+		<div class="slide" style="background: ${bgColor}; border-radius: 16px; padding: 2rem; align-items: center; text-align: center;">
+			<div style="font-size: 3rem;">${icon}</div>
+			<h2>${title}</h2>
+			<p style="max-width: 300px; margin: 0 auto;">${message}</p>
+			<button class="continue-btn finish-btn" style="margin-top: 2rem;">${actionText}</button>
+		</div>
+		`;
+
+		const tempDiv = document.createElement('div');
+		tempDiv.innerHTML = finalSlide.trim();
+		const slideElement = tempDiv.firstElementChild;
+
+		slideWrapper.innerHTML = '';
+		slideWrapper.appendChild(slideElement);
+
+		requestAnimationFrame(() => {
+			setTimeout(postHeightToParent, 50);
+		});
+
+		slideElement.querySelector('.finish-btn').addEventListener('click', () => {
+			window.parent.postMessage({ action: 'closeModal' }, '*');
+		});
+	}
 
 	let current = 0;
 
@@ -163,18 +214,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		slideWrapper.innerHTML = '';
 		slideWrapper.appendChild(slideElement);
 
-// Force restart of animation
 		slideElement.classList.remove('slide');
-		void slideElement.offsetWidth; // Trigger reflow
+		void slideElement.offsetWidth;
 		slideElement.classList.add('slide');
 
-// Ensure proper height after layout + animation
 		requestAnimationFrame(() => {
 			setTimeout(postHeightToParent, 100);
 		});
-
 	}
-
 
 	container.addEventListener('click', (e) => {
 		if (e.target.classList.contains('continue-btn')) {
@@ -182,10 +229,23 @@ document.addEventListener('DOMContentLoaded', function () {
 				current++;
 				renderSlide(current);
 			} else {
-				window.parent.postMessage({action: 'closeModal'}, '*');
+				window.parent.postMessage({ action: 'closeModal' }, '*');
 			}
 		}
+		if (e.target.classList.contains('final-btn')) {
+			const choice = e.target.dataset.choice;
+			renderFinalSlide(choice);
+		}
 	});
+
+	function closeModal() {
+		console.log("⛔ closeModal called"); // Add this line
+		const overlay = document.getElementById("purchase-impact-modal-overlay");
+		if (overlay) {
+			document.body.removeChild(overlay);
+			document.body.style.overflow = "";
+		}
+	}
 
 	renderSlide(current);
 });

@@ -153,4 +153,16 @@ p {
   animation: fadeIn 0.3s ease !important;
 }
 
+.card-section.final-btn {
+  background: #f9f9fb;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-section.final-btn:hover {
+  background: #eef3fa;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+
 
