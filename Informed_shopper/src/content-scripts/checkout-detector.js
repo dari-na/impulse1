@@ -1,5 +1,7 @@
 // src/content-scripts/checkout-detector.js
 
+let originalCheckoutButton = null;
+
 function detectCheckoutButtons() {
 	console.log("🔍 detectCheckoutButtons is running");
 
@@ -26,13 +28,11 @@ function detectCheckoutButtons() {
 			clone.classList.add('mindful-checkout-bound');
 
 			clone.addEventListener("click", function (event) {
-				console.log("🛑 Intercepted cloned checkout button click");
-
 				event.preventDefault();
 				event.stopPropagation();
 				event.stopImmediatePropagation();
 
-				sessionStorage.setItem("originalCheckoutUrl", document.location.href);
+				originalCheckoutButton = button; // Save the real button
 				injectModal();
 			});
 
@@ -104,10 +104,13 @@ window.addEventListener("message", function (event) {
 		console.log("User chose to close the modal.");
 		closeModal();
 	} else if (event.data.action === "continueCheckout") {
-		const originalUrl = sessionStorage.getItem("originalCheckoutUrl");
-		if (originalUrl) {
-			console.log("🔁 Continuing to checkout:", originalUrl);
-			window.location.href = originalUrl;
+		if (originalCheckoutButton) {
+			console.log("🔁 Re-triggering original checkout button");
+			originalCheckoutButton.click();
+			originalCheckoutButton = null; // Clean up
+		} else {
+			console.warn("⚠️ No original button found. Falling back to page reload.");
+			window.location.reload();
 		}
 	}
 });

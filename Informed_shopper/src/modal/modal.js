@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
 
 	const container = document.getElementById('modalContainer');
@@ -10,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	function postHeightToParent() {
 		const height = slideWrapper.scrollHeight + 40;
 		console.log("Slide height being sent:", height);
-		window.parent.postMessage({ action: 'resizeModal', height }, '*');
+		window.parent.postMessage({action: 'resizeModal', height}, '*');
 	}
 
 	let resizeTimeout;
@@ -187,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 
 		slideElement.querySelector('.finish-btn').addEventListener('click', () => {
-			window.parent.postMessage({ action: 'closeModal' }, '*');
+			window.parent.postMessage({action: 'closeModal'}, '*');
 		});
 	}
 
@@ -229,12 +228,19 @@ document.addEventListener('DOMContentLoaded', function () {
 				current++;
 				renderSlide(current);
 			} else {
-				window.parent.postMessage({ action: 'closeModal' }, '*');
+				window.parent.postMessage({action: 'closeModal'}, '*');
 			}
 		}
 		if (e.target.classList.contains('final-btn')) {
 			const choice = e.target.dataset.choice;
 			renderFinalSlide(choice);
+
+			// Only auto-send for "purchase" (user wants to proceed)
+			if (choice === 'purchase') {
+				setTimeout(() => {
+					window.parent.postMessage({action: 'continueCheckout'}, '*');
+				}, 300);
+			}
 		}
 	});
 
